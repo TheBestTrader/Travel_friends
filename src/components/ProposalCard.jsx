@@ -1,8 +1,19 @@
+import { useState } from 'react'
 import { supabase } from '../supabaseClient'
 
 export default function ProposalCard({ proposal, currentUser, myVotedIds, onConfirmClick }) {
   const hasVoted = myVotedIds.has(proposal.id)
   const isConfirmed = proposal.status === 'confirmed'
+  const [cancelConfirm, setCancelConfirm] = useState(false)
+  const [cancelling, setCancelling] = useState(false)
+
+  async function handleCancel() {
+    setCancelling(true)
+    await supabase.from('proposals').update({ status: 'pending' }).eq('id', proposal.id)
+    await supabase.from('itinerary').delete().eq('proposal_id', proposal.id)
+    setCancelling(false)
+    setCancelConfirm(false)
+  }
 
   async function handleVote() {
     if (hasVoted) {
@@ -74,6 +85,34 @@ export default function ProposalCard({ proposal, currentUser, myVotedIds, onConf
           >
             🎉 確認定案
           </button>
+        )}
+
+        {isConfirmed && !cancelConfirm && (
+          <button
+            onClick={() => setCancelConfirm(true)}
+            className="btn-ghost text-xs text-red-500 ml-auto"
+          >
+            取消定案
+          </button>
+        )}
+
+        {isConfirmed && cancelConfirm && (
+          <div className="flex items-center gap-2 ml-auto">
+            <span className="text-xs text-slate-500">確定取消？</span>
+            <button
+              onClick={handleCancel}
+              disabled={cancelling}
+              className="btn-danger text-xs"
+            >
+              {cancelling ? '取消中…' : '確定'}
+            </button>
+            <button
+              onClick={() => setCancelConfirm(false)}
+              className="btn-ghost text-xs"
+            >
+              不了
+            </button>
+          </div>
         )}
       </div>
     </div>

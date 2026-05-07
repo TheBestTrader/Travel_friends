@@ -8,15 +8,19 @@ INSERT INTO storage.buckets (id, name, public)
 VALUES ('avatars', 'avatars', true)
 ON CONFLICT (id) DO NOTHING;
 
--- 3. 允許所有人上傳／讀取（無 RLS 的公開 bucket）
-CREATE POLICY IF NOT EXISTS "avatars public read"
+-- 3. 允許所有人上傳／讀取
+DROP POLICY IF EXISTS "avatars public read" ON storage.objects;
+DROP POLICY IF EXISTS "avatars public upload" ON storage.objects;
+DROP POLICY IF EXISTS "avatars public update" ON storage.objects;
+
+CREATE POLICY "avatars public read"
   ON storage.objects FOR SELECT
   USING (bucket_id = 'avatars');
 
-CREATE POLICY IF NOT EXISTS "avatars public upload"
+CREATE POLICY "avatars public upload"
   ON storage.objects FOR INSERT
   WITH CHECK (bucket_id = 'avatars');
 
-CREATE POLICY IF NOT EXISTS "avatars public update"
+CREATE POLICY "avatars public update"
   ON storage.objects FOR UPDATE
   USING (bucket_id = 'avatars');

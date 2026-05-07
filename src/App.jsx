@@ -6,6 +6,7 @@ import ProposalForm from './components/ProposalForm'
 import ProposalCard from './components/ProposalCard'
 import ConfirmModal from './components/ConfirmModal'
 import ItineraryList from './components/ItineraryList'
+import ItineraryAddModal from './components/ItineraryAddModal'
 
 const SESSION_KEY = 'outing_user'
 
@@ -18,6 +19,8 @@ export default function App() {
   const [itinerary, setItinerary] = useState([])
   const [myVotedIds, setMyVotedIds] = useState(new Set())
   const [confirmTarget, setConfirmTarget] = useState(null)
+  const [showItineraryAdd, setShowItineraryAdd] = useState(false)
+  const [editItineraryItem, setEditItineraryItem] = useState(null)
   const [loadingData, setLoadingData] = useState(false)
 
   // ── 初始資料載入 ────────────────────────────────────────────
@@ -181,8 +184,22 @@ export default function App() {
             <span className="badge bg-emerald-100 text-emerald-700">
               {itinerary.length} 筆
             </span>
+            <button
+              onClick={() => { setEditItineraryItem(null); setShowItineraryAdd(true) }}
+              className="btn-ghost text-xs ml-auto"
+            >
+              ＋ 新增行程
+            </button>
           </div>
-          <ItineraryList items={itinerary} />
+          <ItineraryList
+            items={itinerary}
+            onEdit={item => {
+              if (!item.proposal_id) {
+                setEditItineraryItem(item)
+                setShowItineraryAdd(true)
+              }
+            }}
+          />
         </section>
 
         {/* 已確認提案 */}
@@ -222,6 +239,14 @@ export default function App() {
             loadProposals()
             loadItinerary()
           }}
+        />
+      )}
+      {showItineraryAdd && (
+        <ItineraryAddModal
+          currentUser={currentUser}
+          editItem={editItineraryItem}
+          onClose={() => { setShowItineraryAdd(false); setEditItineraryItem(null) }}
+          onDone={loadItinerary}
         />
       )}
     </div>
