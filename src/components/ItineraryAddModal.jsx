@@ -6,6 +6,7 @@ export default function ItineraryAddModal({ currentUser, onClose, onDone, editIt
   const [date, setDate] = useState(editItem?.date ?? '')
   const [time, setTime] = useState(editItem?.time?.slice(0, 5) ?? '')
   const [location, setLocation] = useState(editItem?.location ?? '')
+  const [address, setAddress] = useState(editItem?.address ?? '')
   const [notes, setNotes] = useState(editItem?.notes ?? '')
   const [saving, setSaving] = useState(false)
   const [error, setError] = useState('')
@@ -21,6 +22,7 @@ export default function ItineraryAddModal({ currentUser, onClose, onDone, editIt
       date,
       time: time || null,
       location: location.trim() || null,
+      address: address.trim() || null,
       notes: notes.trim() || null,
       proposal_id: null,
     }
@@ -105,6 +107,18 @@ export default function ItineraryAddModal({ currentUser, onClose, onDone, editIt
               value={location}
               onChange={e => setLocation(e.target.value)}
               maxLength={80}
+            />
+          </div>
+
+          {/* 地址 */}
+          <div>
+            <label className="block text-xs font-semibold text-slate-500 mb-1.5">地址（選填）</label>
+            <input
+              className="input"
+              placeholder="例：新北市瑞芳區基山街"
+              value={address}
+              onChange={e => setAddress(e.target.value)}
+              maxLength={120}
             />
           </div>
 

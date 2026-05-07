@@ -59,6 +59,18 @@ export default function ItineraryList({ items, onEdit }) {
                         )}
                       </div>
 
+                      {item.address && (
+                        <a
+                          href={`https://maps.google.com/?q=${encodeURIComponent(item.address)}`}
+                          target="_blank"
+                          rel="noopener noreferrer"
+                          onClick={e => e.stopPropagation()}
+                          className="mt-1 text-xs text-slate-500 hover:text-sky-500 flex items-center gap-1 transition-colors"
+                        >
+                          🗺️ {item.address}
+                        </a>
+                      )}
+
                       {item.notes && (
                         <p className="mt-2 text-xs text-slate-600 bg-slate-50 rounded-lg px-3 py-2">
                           📝 {item.notes}

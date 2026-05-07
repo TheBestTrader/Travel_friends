@@ -5,6 +5,7 @@ export default function ConfirmModal({ proposal, onClose, onDone }) {
   const isHotel = proposal.category !== 'restaurant'
   const [date, setDate] = useState('')
   const [time, setTime] = useState('')
+  const [address, setAddress] = useState('')
   const [notes, setNotes] = useState('')
   const [saving, setSaving] = useState(false)
   const [error, setError] = useState('')
@@ -32,6 +33,7 @@ export default function ConfirmModal({ proposal, onClose, onDone }) {
       proposal_id: proposal.id,
       date,
       time: time || null,
+      address: address.trim() || null,
       notes: notes.trim() || null,
     })
 
@@ -85,6 +87,19 @@ export default function ConfirmModal({ proposal, onClose, onDone }) {
               className="input"
               value={time}
               onChange={e => setTime(e.target.value)}
+            />
+          </div>
+
+          <div>
+            <label className="block text-xs font-semibold text-slate-500 mb-1.5">
+              地址（選填）
+            </label>
+            <input
+              className="input"
+              placeholder="例：台北市中正區忠孝東路一段"
+              value={address}
+              onChange={e => setAddress(e.target.value)}
+              maxLength={120}
             />
           </div>
 
