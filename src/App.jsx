@@ -118,7 +118,10 @@ export default function App() {
         <div className="max-w-3xl mx-auto px-4 h-14 flex items-center justify-between">
           <div className="flex items-center gap-2">
             <span className="text-xl">✈️</span>
-            <span className="font-bold text-slate-800">出去玩！</span>
+            <div>
+              <span className="font-bold text-slate-800">出去玩！</span>
+              <span className="text-xs text-sky-500 font-semibold ml-2">5/16（六）～ 5/17（日）</span>
+            </div>
           </div>
           <div className="flex items-center gap-2">
             <span className="text-sm text-slate-600 hidden sm:block">

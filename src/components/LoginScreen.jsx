@@ -60,7 +60,8 @@ export default function LoginScreen({ onLogin }) {
         <div className="text-center mb-8">
           <div className="text-6xl mb-3">✈️</div>
           <h1 className="text-3xl font-bold text-slate-800">出去玩！</h1>
-          <p className="text-slate-500 mt-2">選擇你的名字進入系統</p>
+          <p className="text-sky-500 font-semibold mt-1">5/16（六）～ 5/17（日）</p>
+          <p className="text-slate-500 mt-1 text-sm">選擇你的名字進入系統</p>
         </div>
 
         <div className="card shadow-lg">
