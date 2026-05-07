@@ -3,6 +3,27 @@ import { supabase } from '../supabaseClient'
 
 const AVATARS = ['🧑', '👩', '🧔', '👱', '👸', '🤴', '🧒', '👦', '👧', '🙋']
 
+function Avatar({ user, index, size = 'md' }) {
+  const emoji = AVATARS[index % AVATARS.length]
+  const sizeClass = size === 'lg' ? 'w-14 h-14 text-3xl' : 'w-10 h-10 text-xl'
+  if (user.avatar_url) {
+    return (
+      <img
+        src={user.avatar_url}
+        alt={user.default_name}
+        className={`${sizeClass} rounded-full object-cover flex-shrink-0 border-2 border-white shadow-sm`}
+      />
+    )
+  }
+  return (
+    <div className={`${sizeClass} rounded-full bg-sky-100 flex items-center justify-center flex-shrink-0`}>
+      {emoji}
+    </div>
+  )
+}
+
+export { Avatar }
+
 export default function LoginScreen({ onLogin }) {
   const [users, setUsers] = useState([])
   const [loading, setLoading] = useState(true)
@@ -57,7 +78,7 @@ export default function LoginScreen({ onLogin }) {
                   disabled={selecting === user.id}
                   className="flex items-center gap-3 p-3 rounded-xl border-2 border-slate-100 hover:border-sky-400 hover:bg-sky-50 transition-all duration-150 text-left group disabled:opacity-60"
                 >
-                  <span className="text-2xl">{avatar}</span>
+                  <Avatar user={user} index={i} />
                   <div className="flex-1 min-w-0">
                     <div className="font-semibold text-slate-700 truncate group-hover:text-sky-600">
                       {displayName}
@@ -75,7 +96,7 @@ export default function LoginScreen({ onLogin }) {
         </div>
 
         <p className="text-center text-xs text-slate-400 mt-6">
-          進入後可在右上角設定修改暱稱
+          進入後可在右上角設定修改暱稱與照片
         </p>
       </div>
     </div>
