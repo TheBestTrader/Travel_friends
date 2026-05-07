@@ -1,7 +1,8 @@
 import { useState } from 'react'
 import { supabase } from '../supabaseClient'
 
-export default function ProposalForm({ currentUser }) {
+export default function ProposalForm({ currentUser, category = 'hotel' }) {
+  const isHotel = category === 'hotel'
   const [form, setForm] = useState({ name: '', url: '', price: '' })
   const [submitting, setSubmitting] = useState(false)
   const [error, setError] = useState('')
@@ -14,7 +15,7 @@ export default function ProposalForm({ currentUser }) {
   async function handleSubmit(e) {
     e.preventDefault()
     if (!form.name.trim()) {
-      setError('請輸入住宿名稱')
+      setError(`請輸入${isHotel ? '住宿' : '餐廳'}名稱`)
       return
     }
     setSubmitting(true)
@@ -23,6 +24,7 @@ export default function ProposalForm({ currentUser }) {
       url: form.url.trim() || null,
       price: form.price ? Number(form.price) : null,
       proposed_by: currentUser.id,
+      category,
     })
     if (dbErr) {
       setError('新增失敗：' + dbErr.message)
@@ -34,12 +36,14 @@ export default function ProposalForm({ currentUser }) {
 
   return (
     <form onSubmit={handleSubmit} className="card">
-      <h2 className="font-bold text-base mb-4">➕ 新增住宿提案</h2>
+      <h2 className="font-bold text-base mb-4">
+        {isHotel ? '➕ 新增住宿提案' : '➕ 新增餐廳提案'}
+      </h2>
       <div className="grid grid-cols-1 sm:grid-cols-3 gap-3">
         <div className="sm:col-span-1">
           <input
             className="input"
-            placeholder="住宿名稱 *"
+            placeholder={isHotel ? '住宿名稱 *' : '餐廳名稱 *'}
             value={form.name}
             onChange={e => setField('name', e.target.value)}
             maxLength={60}
@@ -56,7 +60,7 @@ export default function ProposalForm({ currentUser }) {
         <div className="sm:col-span-1">
           <input
             className="input"
-            placeholder="價格 / 晚（選填）"
+            placeholder={isHotel ? '價格 / 晚（選填）' : '價格 / 人（選填）'}
             type="number"
             min="0"
             value={form.price}

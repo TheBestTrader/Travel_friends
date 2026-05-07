@@ -2,6 +2,7 @@ import { useState } from 'react'
 import { supabase } from '../supabaseClient'
 
 export default function ConfirmModal({ proposal, onClose, onDone }) {
+  const isHotel = proposal.category !== 'restaurant'
   const [date, setDate] = useState('')
   const [time, setTime] = useState('')
   const [notes, setNotes] = useState('')
@@ -65,7 +66,7 @@ export default function ConfirmModal({ proposal, onClose, onDone }) {
         <div className="space-y-4">
           <div>
             <label className="block text-xs font-semibold text-slate-500 mb-1.5">
-              入住日期 <span className="text-red-400">*</span>
+              {isHotel ? '入住日期' : '用餐日期'} <span className="text-red-400">*</span>
             </label>
             <input
               type="date"
@@ -77,7 +78,7 @@ export default function ConfirmModal({ proposal, onClose, onDone }) {
 
           <div>
             <label className="block text-xs font-semibold text-slate-500 mb-1.5">
-              入住時間（選填）
+              {isHotel ? '入住時間' : '用餐時間'}（選填）
             </label>
             <input
               type="time"

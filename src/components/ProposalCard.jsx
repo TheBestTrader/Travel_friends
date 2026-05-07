@@ -52,7 +52,7 @@ export default function ProposalCard({ proposal, currentUser, myVotedIds, onConf
           )}
           <div className="flex items-center gap-3 mt-1 text-xs text-slate-500">
             {proposal.price != null && (
-              <span>💰 NT${Number(proposal.price).toLocaleString()} / 晚</span>
+              <span>💰 NT${Number(proposal.price).toLocaleString()} {proposal.category === 'restaurant' ? '/ 人' : '/ 晚'}</span>
             )}
             <span>
               由 <strong>{proposal.proposer_display_name || '某人'}</strong> 提案

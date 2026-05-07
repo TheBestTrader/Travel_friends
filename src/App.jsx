@@ -7,6 +7,7 @@ import ProposalCard from './components/ProposalCard'
 import ConfirmModal from './components/ConfirmModal'
 import ItineraryList from './components/ItineraryList'
 import ItineraryAddModal from './components/ItineraryAddModal'
+import TodoSection from './components/TodoSection'
 
 const SESSION_KEY = 'outing_user'
 
@@ -108,8 +109,10 @@ export default function App() {
   }
 
   const displayName = currentUser.nickname || currentUser.default_name
-  const pendingProposals = proposals.filter(p => p.status === 'pending')
-  const confirmedProposals = proposals.filter(p => p.status === 'confirmed')
+  const pendingHotels = proposals.filter(p => p.status === 'pending' && p.category !== 'restaurant')
+  const confirmedHotels = proposals.filter(p => p.status === 'confirmed' && p.category !== 'restaurant')
+  const pendingRestaurants = proposals.filter(p => p.status === 'pending' && p.category === 'restaurant')
+  const confirmedRestaurants = proposals.filter(p => p.status === 'confirmed' && p.category === 'restaurant')
 
   return (
     <div className="min-h-screen bg-slate-50">
@@ -149,32 +152,59 @@ export default function App() {
           </div>
         )}
 
-        {/* 新增提案表單 */}
-        <ProposalForm currentUser={currentUser} />
-
-        {/* 待定提案區 */}
+        {/* 住宿提案 */}
+        <ProposalForm currentUser={currentUser} category="hotel" />
         <section>
           <div className="flex items-center gap-2 mb-3">
-            <h2 className="font-bold text-slate-700">🗳️ 住宿提案</h2>
-            <span className="badge bg-sky-100 text-sky-700">
-              {pendingProposals.length} 個
-            </span>
+            <h2 className="font-bold text-slate-700">🏨 住宿提案</h2>
+            <span className="badge bg-sky-100 text-sky-700">{pendingHotels.length} 個</span>
           </div>
-          {pendingProposals.length === 0 ? (
+          {pendingHotels.length === 0 ? (
             <div className="card text-center py-8 text-slate-400">
               <div className="text-3xl mb-2">🏨</div>
-              <p className="text-sm">還沒有提案，搶先新增一個吧！</p>
+              <p className="text-sm">還沒有住宿提案，搶先新增一個吧！</p>
             </div>
           ) : (
             <div className="space-y-3">
-              {pendingProposals.map(p => (
-                <ProposalCard
-                  key={p.id}
-                  proposal={p}
-                  currentUser={currentUser}
-                  myVotedIds={myVotedIds}
-                  onConfirmClick={setConfirmTarget}
-                />
+              {pendingHotels.map(p => (
+                <ProposalCard key={p.id} proposal={p} currentUser={currentUser} myVotedIds={myVotedIds} onConfirmClick={setConfirmTarget} />
+              ))}
+            </div>
+          )}
+          {confirmedHotels.length > 0 && (
+            <div className="mt-3 space-y-3">
+              <p className="text-xs text-slate-400 font-semibold">✅ 已定案</p>
+              {confirmedHotels.map(p => (
+                <ProposalCard key={p.id} proposal={p} currentUser={currentUser} myVotedIds={myVotedIds} onConfirmClick={setConfirmTarget} />
+              ))}
+            </div>
+          )}
+        </section>
+
+        {/* 餐廳提案 */}
+        <ProposalForm currentUser={currentUser} category="restaurant" />
+        <section>
+          <div className="flex items-center gap-2 mb-3">
+            <h2 className="font-bold text-slate-700">🍜 餐廳提案</h2>
+            <span className="badge bg-orange-100 text-orange-700">{pendingRestaurants.length} 個</span>
+          </div>
+          {pendingRestaurants.length === 0 ? (
+            <div className="card text-center py-8 text-slate-400">
+              <div className="text-3xl mb-2">🍜</div>
+              <p className="text-sm">還沒有餐廳提案，搶先新增一個吧！</p>
+            </div>
+          ) : (
+            <div className="space-y-3">
+              {pendingRestaurants.map(p => (
+                <ProposalCard key={p.id} proposal={p} currentUser={currentUser} myVotedIds={myVotedIds} onConfirmClick={setConfirmTarget} />
+              ))}
+            </div>
+          )}
+          {confirmedRestaurants.length > 0 && (
+            <div className="mt-3 space-y-3">
+              <p className="text-xs text-slate-400 font-semibold">✅ 已定案</p>
+              {confirmedRestaurants.map(p => (
+                <ProposalCard key={p.id} proposal={p} currentUser={currentUser} myVotedIds={myVotedIds} onConfirmClick={setConfirmTarget} />
               ))}
             </div>
           )}
@@ -205,25 +235,8 @@ export default function App() {
           />
         </section>
 
-        {/* 已確認提案 */}
-        {confirmedProposals.length > 0 && (
-          <section>
-            <div className="flex items-center gap-2 mb-3">
-              <h2 className="font-bold text-slate-700">✅ 已定案住宿</h2>
-            </div>
-            <div className="space-y-3">
-              {confirmedProposals.map(p => (
-                <ProposalCard
-                  key={p.id}
-                  proposal={p}
-                  currentUser={currentUser}
-                  myVotedIds={myVotedIds}
-                  onConfirmClick={setConfirmTarget}
-                />
-              ))}
-            </div>
-          </section>
-        )}
+        {/* 待辦清單 */}
+        <TodoSection currentUser={currentUser} />
       </main>
 
       {/* ─ Modals ─ */}
